@@ -3,12 +3,14 @@ import 'package:flash_chat/constants.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
-  static String id ='login_screen';
+  static String id = 'login_screen';
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool obsecure = true;
+  String label1 ='Enter Your Password';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Container(
           alignment: Alignment.center,
-                  child: ListView(
+          child: ListView(
             scrollDirection: Axis.vertical,
             children: <Widget>[
               Hero(
@@ -34,21 +36,43 @@ class _LoginScreenState extends State<LoginScreen> {
                 onChanged: (value) {
                   //Do something with the user input.
                 },
-                decoration: kTextFeildDecoration.copyWith(labelText: 'Enter Your Email'),
+                decoration: kTextFeildDecoration.copyWith(
+                    labelText: 'Enter Your Email',
+                    hintText: 'example@something.com',
+                    prefixIcon:
+                        Icon(Icons.email, color: Colors.black, size: 20.0)),
               ),
               SizedBox(
                 height: 8.0,
               ),
               TextField(
+                obscureText: obsecure,
                 onChanged: (value) {
                   //Do something with the user input.
                 },
-                decoration: kTextFeildDecoration.copyWith(labelText: 'Enter Your Password'),
-              ),
+                decoration: kTextFeildDecoration.copyWith(
+                  labelText: label1,
+                  hintText: 'Password',
+                  prefixIcon: Icon(Icons.lock, color: Colors.black, size: 20.0),
+                  suffixIcon: label1 == 'Enter Your Password' ? IconButton(
+          icon: Icon(Icons.remove_red_eye),
+          color: Colors.black,
+          iconSize: 20.0,
+          onPressed: () {
+            setState(() {
+              obsecure = !obsecure;
+            });
+          },
+        ) : null
+      ),
+                ),
               SizedBox(
                 height: 24.0,
               ),
-             RoundedButton(title: 'Log In',color: Colors.lightBlueAccent,onpressed: (){})
+              RoundedButton(
+                  title: 'Log In',
+                  color: Colors.lightBlueAccent,
+                  onpressed: () {})
             ],
           ),
         ),
@@ -56,4 +80,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-

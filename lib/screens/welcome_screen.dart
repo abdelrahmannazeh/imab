@@ -5,26 +5,25 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 
 class WelcomeScreen extends StatefulWidget {
- static String id = 'welcome_screen';
+  static String id = 'welcome_screen';
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin{
+class _WelcomeScreenState extends State<WelcomeScreen>
+    with SingleTickerProviderStateMixin {
   AnimationController controller;
   @override
   void initState() {
     super.initState();
-    controller =AnimationController(duration: Duration(seconds: 1),vsync: this);
+    controller =
+        AnimationController(duration: Duration(seconds: 1), vsync: this);
     controller.forward();
     controller.addListener(() {
-      setState(() {
-        
-      });
+      setState(() {});
       print(controller.value);
-     });
+    });
   }
- 
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +39,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
               children: <Widget>[
                 Hero(
                   tag: 'logo',
-                    child: Container(
+                  child: Container(
                     child: Image.asset('images/logo.png'),
                     height: 60.0,
                   ),
                 ),
                 TypewriterAnimatedTextKit(
-                  text:['IMAB'],
+                  text: ['IMAB'],
                   textStyle: TextStyle(
                     fontSize: 45.0,
                     fontWeight: FontWeight.w900,
@@ -57,16 +56,23 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
             SizedBox(
               height: 48.0,
             ),
-            RoundedButton(color: Colors.lightBlueAccent,title: 'Log In',onpressed:  () {
-                    Navigator.pushNamed(context, LoginScreen.id);},),
-            RoundedButton(color: Colors.blueAccent,title: 'Register',onpressed:  () {
-                    Navigator.pushNamed(context, RegistrationScreen.id);},
-                    ),
+            RoundedButton(
+              color: Colors.lightBlueAccent,
+              title: 'Log In',
+              onpressed: () {
+                Navigator.pushNamed(context, LoginScreen.id);
+              },
+            ),
+            RoundedButton(
+              color: Colors.blueAccent,
+              title: 'Register',
+              onpressed: () {
+                Navigator.pushNamed(context, RegistrationScreen.id);
+              },
+            ),
           ],
         ),
       ),
     );
   }
 }
-
-
