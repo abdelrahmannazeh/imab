@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "625516288007",
+    "firebase_url": "https://imab-a26a6.firebaseio.com",
+    "project_id": "imab-a26a6",
+    "storage_bucket": "imab-a26a6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:625516288007:android:5cafc479e1f507419572a2",
+        "android_client_info": {
+          "package_name": "co.appbrewery.flash_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "625516288007-4kql5vg5il9bpvmk522v2vacojo2saa2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJs_kzXBx0kKx0wFh-nRyr5atyzxrjiCQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "625516288007-4kql5vg5il9bpvmk522v2vacojo2saa2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -5,30 +5,19 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 
 class WelcomeScreen extends StatefulWidget {
-  static String id = 'welcome_screen';
+ static String id = 'welcome_screen';
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen>
-    with SingleTickerProviderStateMixin {
-  AnimationController controller;
-  @override
-  void initState() {
-    super.initState();
-    controller =
-        AnimationController(duration: Duration(seconds: 1), vsync: this);
-    controller.forward();
-    controller.addListener(() {
-      setState(() {});
-      print(controller.value);
-    });
-  }
+{
+ 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white.withOpacity(controller.value),
+
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
@@ -39,13 +28,13 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               children: <Widget>[
                 Hero(
                   tag: 'logo',
-                  child: Container(
+                    child: Container(
                     child: Image.asset('images/logo.png'),
                     height: 60.0,
                   ),
                 ),
                 TypewriterAnimatedTextKit(
-                  text: ['IMAB'],
+                  text:['IMAB'],
                   textStyle: TextStyle(
                     fontSize: 45.0,
                     fontWeight: FontWeight.w900,
@@ -69,10 +58,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               onpressed: () {
                 Navigator.pushNamed(context, RegistrationScreen.id);
               },
-            ),
+                    ),
           ],
         ),
       ),
     );
   }
 }
+
+

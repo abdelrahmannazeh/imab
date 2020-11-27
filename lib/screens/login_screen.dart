@@ -1,6 +1,9 @@
 import 'package:flash_chat/components/rounded_button.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flash_chat/services/auth.dart';
+import 'package:flash_chat/screens/home_screen.dart';
+
 
 class LoginScreen extends StatefulWidget {
   static String id = 'login_screen';
@@ -9,8 +12,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  AuthService _auth = AuthService();
   bool obsecure = true;
   String label1 ='Enter Your Password';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,6 +43,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 onChanged: (value) {
                   //Do something with the user input.
                 },
+
+                controller: _emailController,
+
                 decoration: kTextFeildDecoration.copyWith(
                     labelText: 'Enter Your Email',
                     hintText: 'example@something.com',
@@ -65,14 +75,21 @@ class _LoginScreenState extends State<LoginScreen> {
           },
         ) : null
       ),
+
+
+                controller: _passwordController,
+
+
                 ),
               SizedBox(
                 height: 24.0,
               ),
-              RoundedButton(
-                  title: 'Log In',
-                  color: Colors.lightBlueAccent,
-                  onpressed: () {})
+             RoundedButton(title: 'Log In',color: Colors.lightBlueAccent,onpressed: () async {
+              dynamic result = await _auth.signInWithEmailAndPassword(_emailController.text, _passwordController.text);
+              if(result != null){
+                Navigator.pushNamedAndRemoveUntil(context, HomeScreen.id, (r) => false);
+              }
+             })
             ],
           ),
         ),
