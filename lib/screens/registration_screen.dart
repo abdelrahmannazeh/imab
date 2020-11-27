@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:flash_chat/services/auth.dart';
@@ -17,7 +18,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String label2 ='Confirm Your Password';
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
   AuthService _auth = AuthService();
+
+  Widget buildDialog(BuildContext context, String msg){
+    return AlertDialog(
+      content: Text(msg),
+      actions: [
+        FlatButton(
+          child: Text('Ok'),
+          onPressed: (){
+            Navigator.pop(context);
+          },
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,6 +60,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 onChanged: (value) {
                   //Do something with the user input.
                 },
+                controller: _nameController,
                 decoration: kTextFeildDecoration.copyWith(
                     labelText: 'Full Name',
                     hintText: 'User Name',
@@ -95,9 +113,29 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 title: 'Register',
                 color: Colors.lightBlueAccent,
                 onpressed: () async {
-                 dynamic result = await _auth.registerWithEmailAndPassword(_emailController.text, _passwordController.text);
-                 if(result != null){
-                   Navigator.pushNamedAndRemoveUntil(context, HomeScreen.id, (r) => false);
+                 if (_emailController.text.isEmpty || _passwordController.text.isEmpty || _nameController.text.isEmpty){
+                   showDialog(context: context, child: buildDialog(context,'Please put some Data'));
+
+                 }else if (_passwordController.text.length < 6){
+                   showDialog(context: context, child: buildDialog(context, 'Password must be at least 6 characters'));
+                 }
+                 else if(!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text)){
+                   showDialog(context: context,
+                       child: buildDialog(context, 'Email address is badly formatted')
+                   );
+                 }
+                 else if (_emailController.text.isNotEmpty && _passwordController.text.isNotEmpty && _nameController.text.isNotEmpty){
+                   dynamic result = await _auth.registerWithEmailAndPassword(_emailController.text, _passwordController.text);
+                   if(result is FirebaseUser){
+                     FirebaseAuth.instance.currentUser().then((value) {
+                       UserUpdateInfo updateUser = UserUpdateInfo();
+                       updateUser.displayName = _nameController.text;
+                       value.updateProfile(updateUser);
+                     });
+                     Navigator.pushNamedAndRemoveUntil(context, HomeScreen.id, (r) => false);
+                   }else {
+                     showDialog(context: context, child: buildDialog(context, result.toString()));
+                   }
                  }
                 })
             ],

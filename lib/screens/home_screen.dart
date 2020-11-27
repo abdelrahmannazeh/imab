@@ -1,22 +1,28 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flash_chat/components/MyDrawerBuilder.dart';
 import 'package:flash_chat/screens/welcome_screen.dart';
 import 'package:flash_chat/services/auth.dart';
 import 'package:flutter/material.dart';
+import '../user.dart';
 import 'details_screen.dart';
-import 'package:flash_chat/screens/welcome_screen.dart';
 class HomeScreen extends StatefulWidget {
   static String id = 'home_screen';
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   AuthService _auth = AuthService();
-
-
   int selected = 0;
-
+  User user = User();
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth.instance.currentUser().then((value) {
+      print(value.displayName);
+
+    });
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -41,7 +47,9 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      drawer: Drawer(),
+      drawer: Drawer(
+        child: MyDrawer(),
+      ),
       body: Column(
         children: [
           Expanded(
