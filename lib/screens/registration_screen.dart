@@ -1,7 +1,9 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:flash_chat/services/auth.dart';
+import 'package:flash_chat/services/store.dart';
 import 'package:flutter/material.dart';
 
 import 'home_screen.dart';
@@ -20,6 +22,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   AuthService _auth = AuthService();
+  StoreService _store = StoreService();
 
   Widget buildDialog(BuildContext context, String msg){
     return AlertDialog(
@@ -129,6 +132,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                    dynamic result = await _auth.registerWithEmailAndPassword(_emailController.text, _passwordController.text);
                    if(result == null){
                      FirebaseAuth.instance.currentUser.updateProfile(displayName: _nameController.text);
+                     _store.addUser();
                      Navigator.pushNamedAndRemoveUntil(context, HomeScreen.id, (r) => false);
                    }else {
                      showDialog(context: context, child: buildDialog(context, result.toString()));

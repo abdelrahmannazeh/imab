@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flash_chat/components/MyDrawerBuilder.dart';
-import 'package:flash_chat/screens/welcome_screen.dart';
-import 'package:flash_chat/services/auth.dart';
+import 'package:flash_chat/model/product.dart';
+import 'package:flash_chat/model/user.dart';
+import 'package:flash_chat/services/store.dart';
 import 'package:flutter/material.dart';
 import 'details_screen.dart';
 class HomeScreen extends StatefulWidget {
@@ -10,14 +12,33 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+
 class _HomeScreenState extends State<HomeScreen> {
 
+  CollectionReference products = FirebaseFirestore.instance.collection('Products');
+  Product product;
+  Future<dynamic> getProduct(String pid) async {
+
+    await products.doc(pid).get().then<dynamic>((value) {
+
+      setState(() {
+        product = Product(pid: pid, name:  value.get('name'),
+        description:  value.get('description'),
+        price:  value.get('price'));
+      });
+    }).catchError((e) => null);
+  }
+
+
   int selected = 0;
-
-
+  List<UserData> user;
+  // List<Product> product;
+  Product productpiece;
+  StoreService _store = StoreService();
   @override
   Widget build(BuildContext context) {
-
+    // getProduct('JaReTjWtDIBnhwDIaxBj');
+    // print(product.price);
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -25,7 +46,17 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.shopping_bag),
-            onPressed: () {},
+            onPressed: () async{
+
+              // productpiece = await _store.getProduct('JaReTjWtDIBnhwDIaxBj').price;
+              // print(await _store.getProduct('JaReTjWtDIBnhwDIaxBj'));
+              // product = await _store.getProducts();
+              // print(product[0].description);
+              // user = await _store.getUser();
+              // print(user[0].cart);
+
+
+            },
           ),
           IconButton(
             icon: Icon(Icons.search),
@@ -36,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       drawer: Drawer(
-        child: MyDrawer(),
+        child: MyDrawerBuilder(),
       ),
       body: Column(
         children: [
