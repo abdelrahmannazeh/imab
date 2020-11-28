@@ -28,10 +28,10 @@ class StoreService{
   //
   // }
 
-  Future<void> addProduct( String name, String description, String price ){
+  Future<String> addProduct( String name, String description, String price ){
     return products
         .add({ 'name' : name, 'description' : description, 'price' : price })
-        .then((value) => print("Product Added"))
+        .then((value) => "Product Added")
         .catchError((error) => print("Failed to add product: $error"));
   }
 

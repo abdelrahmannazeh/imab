@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flash_chat/components/MyDrawerBuilder.dart';
+import './../services/store.dart';
 
 class AddProduct extends StatelessWidget {
   static String id = 'addproduct_screen';
@@ -11,36 +12,42 @@ class AddProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    StoreService _store = StoreService();
     return Scaffold(
-
-      backgroundColor: Colors.grey[100],
-      appBar: null,
-      drawer: Drawer(
-        child: MyDrawerBuilder(),
-      ),
-      body: Form(
+        backgroundColor: Colors.grey[100],
+        appBar: null,
+        drawer: Drawer(
+          child: MyDrawerBuilder(),
+        ),
+        body: Builder(
+          builder: (BuildContext context) {
+            return Form(
         key: _formkey,
         child: Container(
-          
           child: ListView(
             children: [
               _buildImage(context),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: _buildName(),
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: _buildDis(),
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: _buildAmount(),
               ),
-              
               SizedBox(
                 height: MediaQuery.of(context).size.height * .1,
               ),
@@ -52,20 +59,31 @@ class AddProduct extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   color: Theme.of(context).primaryColor,
-                  onPressed: () {
+                  onPressed: () async {
                     if (!_formkey.currentState.validate()) {
                       return;
                     }
 
                     _formkey.currentState.save();
+                    try {
+                      String a = await _store.addProduct(_name, _dis, _amount);
+                      Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text(a),
+                        duration: Duration(seconds: 2),
+                      ));
+                      _formkey.currentState.reset();
+                    } catch (e) {
+                      print(e);
+                    }
                   },
                 ),
               )
             ],
           ),
         ),
-      ),
-    );
+      );
+          },
+        ));
   }
 
   //
@@ -103,7 +121,7 @@ class AddProduct extends StatelessWidget {
   ///
   Widget _buildAmount() {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Amount'),
+      decoration: InputDecoration(labelText: 'price'),
       keyboardType: TextInputType.number,
       validator: (String value) {
         if (value.isEmpty) {
@@ -121,7 +139,8 @@ class AddProduct extends StatelessWidget {
   }
 
   ////
-  Widget _buildImage(context,[String imageUrl = 'https://picsum.photos/250?image=2']){
+  Widget _buildImage(context,
+      [String imageUrl = 'https://picsum.photos/250?image=2']) {
     return Stack(
       overflow: Overflow.visible,
       alignment: AlignmentDirectional.topCenter,
@@ -133,25 +152,30 @@ class AddProduct extends StatelessWidget {
           decoration: BoxDecoration(
               color: Colors.amberAccent,
               borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
-                  child:  Image.network(imageUrl,fit: BoxFit.cover,),
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20))),
+          child: Image.network(
+            imageUrl,
+            fit: BoxFit.cover,
+          ),
         ),
         Positioned(
-            bottom:20,
+            bottom: 20,
             right: 20,
             child: Container(
-              decoration: BoxDecoration(color: Colors.grey,borderRadius: BorderRadius.circular(60)),
+              decoration: BoxDecoration(
+                  color: Colors.grey, borderRadius: BorderRadius.circular(60)),
               child: IconButton(
-                color: Colors.white,
-                    icon: Icon(
-                      Icons.add_a_photo,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {}),
+                  color: Colors.white,
+                  icon: Icon(
+                    Icons.add_a_photo,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {}),
             )),
       ],
     );
   }
   /////
-  
+
 }
