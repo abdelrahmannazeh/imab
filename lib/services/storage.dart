@@ -7,7 +7,6 @@ class StorageService{
 
   Future<void> uploadFile(File file, String path) async {
 
-
     try {
       await firebase_storage.FirebaseStorage.instance
           .ref(path)
