@@ -14,24 +14,16 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileState extends State<ProfileScreen> {
   StorageService _storageService = StorageService();
-  File image = null;
+  File image;
   String name = '';
   double opacity = 0.0;
-  void display (){
-    setState(() {
-      name = FirebaseAuth.instance.currentUser.displayName;
-      print(FirebaseAuth.instance.currentUser.photoURL);
-      print(name);
-      // File file = File();
-      // image = file;
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    display();
+    name = FirebaseAuth.instance.currentUser.displayName;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

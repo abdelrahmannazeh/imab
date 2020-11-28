@@ -6,11 +6,10 @@ import 'package:flutter/material.dart';
 
 class Wrapper extends StatelessWidget{
   static String id = 'wrapper';
+
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-
-    // return either the Home or Authenticate widget
     if (user == null){
       return WelcomeScreen();
     } else {

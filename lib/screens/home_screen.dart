@@ -11,7 +11,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  AuthService _auth = AuthService();
+
   int selected = 0;
 
 
@@ -33,13 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
               showSearch(context: context, delegate: MySearch());
             },
           ),
-          FlatButton(
-              onPressed: () async {
-                await _auth.signOut();
-                Navigator.pushNamedAndRemoveUntil(context, WelcomeScreen.id, (route) => false);
-              },
-              child: Text('Sign Out')
-          )
         ],
       ),
       drawer: Drawer(
