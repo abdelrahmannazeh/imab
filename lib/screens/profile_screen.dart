@@ -1,4 +1,8 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flash_chat/screens/home_screen.dart';
+import 'package:flash_chat/services/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -9,8 +13,25 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileState extends State<ProfileScreen> {
+  StorageService _storageService = StorageService();
+  File image = null;
+  String name = '';
+  double opacity = 0.0;
+  void display (){
+    setState(() {
+      name = FirebaseAuth.instance.currentUser.displayName;
+      print(FirebaseAuth.instance.currentUser.photoURL);
+      print(name);
+      // File file = File();
+      // image = file;
+    });
+  }
 
-  File image;
+  @override
+  void initState() {
+    super.initState();
+    display();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,10 +48,12 @@ class _ProfileState extends State<ProfileScreen> {
                 color: Colors.white,
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                    image: image != null
-                        ? FileImage(image)
-                        : AssetImage('assets/a.jpg'),
-                    fit: BoxFit.fill),
+                    image: FirebaseAuth.instance.currentUser.photoURL != null || image != null ?
+                    (image == null?
+                    NetworkImage(FirebaseAuth.instance.currentUser.photoURL) : FileImage(image))
+                        : AssetImage('assets/Products/a.png'),
+                    fit: BoxFit.fill
+                ),
               ),
               alignment: Alignment.bottomRight,
               child: IconButton(
@@ -103,7 +126,7 @@ class _ProfileState extends State<ProfileScreen> {
               height: 15.0,
             ),
             Text(
-              'User Name',
+              name,
               style: TextStyle(
                   fontSize: 30.0,
                   color: Colors.black,
@@ -113,8 +136,19 @@ class _ProfileState extends State<ProfileScreen> {
               height: 15.0,
             ),
             item('Orders',  Icons.add_shopping_cart),
-            item('My wishlist',  Icons.favorite),
-            
+            item('My Wishlist',  Icons.favorite),
+            Opacity(
+              opacity: opacity,
+              child: ElevatedButton(
+                child: Text('Save'),
+                onPressed: () async {
+                  await _storageService.uploadFile(image, 'Users/${FirebaseAuth.instance.currentUser.uid}/profile_pic');
+                  String urL = await _storageService.downloadURL('Users/${FirebaseAuth.instance.currentUser.uid}/profile_pic') as String;
+                  FirebaseAuth.instance.currentUser.updateProfile(photoURL: urL);
+                  Navigator.pushNamed(context, HomeScreen.id);
+                  },
+            ),
+            )
           ],
         ),
       ),
@@ -148,6 +182,7 @@ class _ProfileState extends State<ProfileScreen> {
     var _image = await ImagePicker.pickImage(source: source);
     setState(() {
       image = _image;
+      opacity = 1.0;
     });
   }
 }

@@ -94,7 +94,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   labelText: label1,
                   hintText: 'Password',
                   prefixIcon: Icon(Icons.lock, color: Colors.black, size: 20.0),
-                  suffixIcon: label1 == 'Enter Your Password' ? IconButton(
+                  suffixIcon: label1 == 'Enter Your Password' ?
+                  IconButton(
                   icon: Icon(Icons.remove_red_eye),
                   color: Colors.black,
                   iconSize: 20.0,
@@ -126,12 +127,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                  }
                  else if (_emailController.text.isNotEmpty && _passwordController.text.isNotEmpty && _nameController.text.isNotEmpty){
                    dynamic result = await _auth.registerWithEmailAndPassword(_emailController.text, _passwordController.text);
-                   if(result is FirebaseUser){
-                     FirebaseAuth.instance.currentUser().then((value) {
-                       UserUpdateInfo updateUser = UserUpdateInfo();
-                       updateUser.displayName = _nameController.text;
-                       value.updateProfile(updateUser);
-                     });
+                   if(result == null){
+                     FirebaseAuth.instance.currentUser.updateProfile(displayName: _nameController.text);
                      Navigator.pushNamedAndRemoveUntil(context, HomeScreen.id, (r) => false);
                    }else {
                      showDialog(context: context, child: buildDialog(context, result.toString()));

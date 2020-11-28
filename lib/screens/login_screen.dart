@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/services/auth.dart';
 import 'package:flash_chat/screens/home_screen.dart';
+
 
 
 class LoginScreen extends StatefulWidget {
@@ -13,11 +13,16 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   AuthService _auth = AuthService();
   bool obsecure = true;
   String label1 ='Enter Your Password';
+
+
+
+
 
   Widget buildDialog(BuildContext context, String msg){
     return AlertDialog(
@@ -104,25 +109,35 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 24.0,
               ),
              RoundedButton(title: 'Log In',color: Colors.lightBlueAccent,onpressed: () async {
-               if (_emailController.text.isEmpty || _passwordController.text.isEmpty){
+               if (_emailController.text.isEmpty ||
+                   _passwordController.text.isEmpty) {
                  showDialog(context: context,
-                 child: buildDialog(context, 'please put some data')
+                     child: buildDialog(context, 'please put some data')
                  );
                }
-               else if(!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text)){
+               else if (!RegExp(
+                   r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                   .hasMatch(_emailController.text)) {
                  showDialog(context: context,
-                     child: buildDialog(context, 'email address is badly formatted')
+                     child: buildDialog(
+                         context, 'email address is badly formatted')
                  );
                }
-               else if (_emailController.text.isNotEmpty && _passwordController.text.isNotEmpty){
-                 dynamic result = await _auth.signInWithEmailAndPassword(_emailController.text, _passwordController.text);
-                 if(result is FirebaseUser){
-                   Navigator.pushNamedAndRemoveUntil(context, HomeScreen.id, (r) => false);
-                 }else {
-                   showDialog(context: context, child: buildDialog(context, result.toString()));
+               else if (_emailController.text.isNotEmpty &&
+                   _passwordController.text.isNotEmpty) {
+                 dynamic result = await _auth.signInWithEmailAndPassword(
+                     _emailController.text, _passwordController.text);
+                 if (result == null) {
+                   Navigator.pushNamedAndRemoveUntil(
+                       context, HomeScreen.id, (r) => false);
+                 } else if (result != null) {
+                   showDialog(context: context,
+                       child: buildDialog(context, result.toString()));
                  }
                }
-             })
+             }
+             )
+
             ],
           ),
         ),

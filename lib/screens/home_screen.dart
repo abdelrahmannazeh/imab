@@ -1,9 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/components/MyDrawerBuilder.dart';
 import 'package:flash_chat/screens/welcome_screen.dart';
 import 'package:flash_chat/services/auth.dart';
 import 'package:flutter/material.dart';
-import '../user.dart';
 import 'details_screen.dart';
 class HomeScreen extends StatefulWidget {
   static String id = 'home_screen';
@@ -15,13 +13,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   AuthService _auth = AuthService();
   int selected = 0;
-  User user = User();
+
+
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth.instance.currentUser().then((value) {
-      print(value.displayName);
-
-    });
 
     return Scaffold(
       appBar: AppBar(
@@ -57,9 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ListView(
                 children: [
                   barBetween("offers"),
-                  elementBuilder(context, 10),
+                  elementBuilder(context, 10, false),
                   barBetween("most pobular"),
-                  elementBuilder(context, 10),
+                  elementBuilder(context, 10, true),
                 ],
               ),
             ),
@@ -85,11 +80,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget elementBuilder(context, int elementNumber) {
+  Widget elementBuilder(context, int elementNumber, bool x) {
     return Container(
       height: MediaQuery.of(context).size.height / 3,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
+        reverse: x,
         itemBuilder: (ctx, index) {
           return Container(
             margin: EdgeInsets.all(11),

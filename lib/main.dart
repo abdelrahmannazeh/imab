@@ -5,20 +5,21 @@ import 'screens/login_screen.dart';
 import 'screens/registration_screen.dart';
 import 'screens/wrapper.dart';
 import 'screens/home_screen.dart';
-import 'package:provider/provider.dart';
-import 'services/auth.dart';
-import 'user.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(FlashChat());
+}
 
 
 
-void main() => runApp(FlashChat());
 
 class FlashChat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<User>.value(
-      value: AuthService().user,
-      child: MaterialApp(
+    return MaterialApp(
         home: Wrapper(),
         // theme: ThemeData.dark().copyWith(
         //   textTheme: TextTheme(
@@ -35,15 +36,8 @@ class FlashChat extends StatelessWidget {
           ProfileScreen.id : (context) => ProfileScreen()
 
         },
-      ),
+
 
     );
   }
 }
-
-
-// MaterialApp(
-
-//
-
-//     );

@@ -1,3 +1,4 @@
+import 'package:flash_chat/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -29,7 +30,7 @@ List<String> drawerTitle = [
             leading: Icon(drawerLeading[index]),
           ),
           onTap: () {
-            // Navigator.push(context, MaterialPageRoute(builder: ()=>))
+            Navigator.pushNamed(context, ProfileScreen.id);
           },
         );
       },
