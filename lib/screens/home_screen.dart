@@ -1,4 +1,6 @@
 import 'package:flash_chat/components/MyDrawerBuilder.dart';
+import 'package:flash_chat/model/product.dart';
+import 'package:flash_chat/services/store.dart';
 import 'package:flutter/material.dart';
 import 'details_screen.dart';
 class HomeScreen extends StatefulWidget {
@@ -8,13 +10,21 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+ StoreService _store = StoreService();
+ List<Product> test;
+
+
 
 class _HomeScreenState extends State<HomeScreen> {
-
+  void getAll(){
+    setState(() async {
+      test = await _store.getProducts();
+    });
+  }
   int selected = 0;
   @override
   Widget build(BuildContext context) {
-
+    print(test.length);
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
