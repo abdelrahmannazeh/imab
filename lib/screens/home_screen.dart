@@ -8,6 +8,7 @@ class HomeScreen extends StatefulWidget {
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
+
 }
 
  StoreService _store = StoreService();
@@ -15,20 +16,32 @@ class HomeScreen extends StatefulWidget {
 
 
 
+// void getAll() async{
+//   test = await  _store.getProducts();
+//   print(test.length);
+//   loading = false;
+// }
+
+
 class _HomeScreenState extends State<HomeScreen> {
-  void getAll(){
-    setState(() async {
-      test = await _store.getProducts();
-    });
-  }
+  bool loading = true;
   int selected = 0;
   @override
   Widget build(BuildContext context) {
-    print(test.length);
+
+       _store.getProducts().then((value){
+        setState(() {
+          test = value;
+          loading = false;
+        });
+      });
+
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
         title: Text("Home"),
+
         actions: [
           IconButton(
             icon: Icon(Icons.shopping_bag),
@@ -45,12 +58,14 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: Drawer(
         child: MyDrawerBuilder(),
       ),
-      body: Column(
+      body: loading? Center(child: CircularProgressIndicator(),):
+      Column(
         children: [
           Expanded(
             child: Container(
               child: ListView(
                 children: [
+                  Text(test[11].description),
                   barBetween("offers"),
                   elementBuilder(context, 10, false),
                   barBetween("most pobular"),
