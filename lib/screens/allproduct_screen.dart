@@ -1,4 +1,5 @@
 import 'package:flash_chat/model/product.dart';
+import 'package:flash_chat/screens/details_screen.dart';
 import 'package:flash_chat/services/store.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +27,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
   @override
   Widget build(BuildContext context) {
     _store.getProducts().then((value){
+      if (loading)
         setState(() {
           test = value;
           loading = false;
@@ -39,15 +41,15 @@ class _AllProductScreenState extends State<AllProductScreen> {
       body: loading? Center(child: CircularProgressIndicator(),):Container(
         padding: EdgeInsets.symmetric(horizontal: 8),
         child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 3 / 2,
-            crossAxisSpacing: 15,
-            mainAxisSpacing: 10,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 3 / 2,
+              crossAxisSpacing: 15,
+              mainAxisSpacing: 10,
+            ),
+            itemBuilder: (ctx, index){ return _BuildAllProductItem(imageUrl: 'https://picsum.photos/250?image=2',title: test[index].name,price: test[index].price == null ? 'null':test[index].price+'\$',dis: test[index].description,pid:test[index].pid);},
+            itemCount: test.length,
           ),
-          itemBuilder: (ctx, index){ return _BuildAllProductItem(imageUrl: 'https://picsum.photos/250?image=2',title: test[index].name,price: test[index].price == null ? 'null':test[index].price+'\$',);},
-          itemCount: test.length,
-        ),
       ),
     );
   }
@@ -58,28 +60,35 @@ class _AllProductScreenState extends State<AllProductScreen> {
 class _BuildAllProductItem extends StatelessWidget {
   String imageUrl  ;
   String title ;
+  String dis;
   String price;
+  String pid;
 
-  _BuildAllProductItem({this.imageUrl ,this.title ,this.price });
+  _BuildAllProductItem({this.imageUrl ,this.title ,this.price ,this.dis,this.pid});
  
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: GridTile(
-        child: Image.network(
-          this.imageUrl,
-          fit: BoxFit.cover,
-        ),
-        footer: GridTileBar(
-          backgroundColor: Colors.black54,
-          title: Text(this.title),
-          trailing: Text(
-            this.price,
-            style: TextStyle(color: Colors.white),
+      child: GestureDetector(
+        onTap: (){
+          Navigator.push(context, MaterialPageRoute(builder: (_)=>DetailsScreen(imageUrl: imageUrl,title: this.title,dis: this.dis,price: this.price,pid:this.pid)));
+        },
+              child: GridTile(
+          child: Image.network(
+            this.imageUrl,
+            fit: BoxFit.cover,
           ),
-          leading: IconButton(
-            icon: Icon(Icons.add_shopping_cart),
-            onPressed: () {},
+          footer: GridTileBar(
+            backgroundColor: Colors.black54,
+            title: Text(this.title),
+            trailing: Text(
+              this.price,
+              style: TextStyle(color: Colors.white),
+            ),
+            leading: IconButton(
+              icon: Icon(Icons.add_shopping_cart),
+              onPressed: () {},
+            ),
           ),
         ),
       ),

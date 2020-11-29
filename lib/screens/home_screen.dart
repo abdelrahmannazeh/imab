@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
 
        _store.getProducts().then((value){
+         if(loading)
         setState(() {
           test = value;
           loading = false;
@@ -66,7 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Container(
               child: ListView(
                 children: [
-                  Text(test[11].description),
                   barBetween("offers"),
                   elementBuilder(context, 10, false),
                   barBetween("most pobular"),

@@ -1,44 +1,24 @@
+import 'package:flash_chat/services/store.dart';
 import 'package:flutter/material.dart';
 
 class DetailsScreen extends StatelessWidget {
   String imageUrl = '';
-  DetailsScreen({@required  this.imageUrl});
-
+  String title ;
+  String dis;
+  String price;
+  String pid;
+  DetailsScreen({@required  this.imageUrl,this.title,this.price,this.dis,this.pid});
+  StoreService _store = StoreService();
   @override
   Widget build(BuildContext context) {
     print(imageUrl);
-    final text =
-        "long long discreption that have more than 3 lines long long discreption that have more than 3 lines long long discreption that have more than 3 lines long long discreption that have more than 3 lines long long discreption that have more than 3 lines long long discreption that have more than 3 lines long long discreption that have more than 3 lines long long discreption that have more than 3 lines";
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           myappbar(context, imageUrl),
-          // SliverFixedExtentList(
-          //     delegate: SliverChildListDelegate([
-          //       Container(color: Colors.green,),
-          //       Container(color: Colors.blue,),
-          //       Container(color: Colors.yellow,),
-          //     ]), itemExtent: MediaQuery.of(context).size.height/3),
-          labelAndDiscription("product name", text),
-          // SliverGrid(
-          //   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          //     maxCrossAxisExtent: MediaQuery.of(context).size.width / 2,
-          //     mainAxisSpacing: 10.0,
-          //     crossAxisSpacing: 10.0,
-          //   ),
-          //   delegate: SliverChildBuilderDelegate(
-          //     (context, index) {
-          //       return Container(
-          //         color: Colors.yellow,
-          //         margin: EdgeInsets.all(10),
-          //       );
-          //     },
-          //     childCount: 4,
-          //   ),
-          // ),
-          //
-          //
-          // add to cart and add to favorite buttons
+          
+          labelAndDiscription(this.title, this.dis),
+          
           SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
               return Row(
@@ -51,7 +31,9 @@ class DetailsScreen extends StatelessWidget {
                         EdgeInsets.symmetric(horizontal: 20, vertical: 30),
                         child: RaisedButton(
                           child: Text("add to cart"),
-                          onPressed: () {},
+                          onPressed: () async{
+                            await _store.addToCart(pid);
+                          },
                         ),
                       )),
                   Expanded(
