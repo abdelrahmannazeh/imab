@@ -6,27 +6,25 @@ import 'package:flash_chat/model/user.dart';
 class StoreService{
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
   CollectionReference products = FirebaseFirestore.instance.collection('Products');
+
+
   Future<void> addUser() {
-    // Call the user's CollectionReference to add a new user
     return users.doc(FirebaseAuth.instance.currentUser.uid)
         .set({'cart': List<String>(), 'orders': List<String>()})
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
 
-  // Future<List<UserData>> getUser() {
-  //   List<UserData> userData = List<UserData>();
-  //        users.get().then((value) {
-  //       value.docs.forEach((element) {
-  //         if(element.id == FirebaseAuth.instance.currentUser.uid){
-  //           userData.add(UserData(cart: element.get('cart'), orders: element.get('orders')));
-  //           print(element.get('cart'));
-  //         }
-  //         return userData;
-  //       });
-  //     }).catchError((error) => null);
-  //
-  // }
+  Future<UserData> getUser() async {
+    try {
+      final userDocument =
+      users.doc(FirebaseAuth.instance.currentUser.uid);
+      final userData = (await userDocument.get()).data();
+      return UserData.fromMap(userData);
+    }catch (e){
+
+    }
+  }
 
   Future<String> addProduct( String name, String description, String price ){
     return products
@@ -48,16 +46,13 @@ class StoreService{
 
   }
 
-  // Product getProduct(String pid){
-  //   Product product;
-  //   products.doc(pid).get().then((value) {
-  //     product = Product(pid: pid, name: value.get('name'),
-  //         description: value.get('description'),
-  //         price: value.get('price'));
-  //
-  //   }).catchError((e) => print('ero'));
-  //   return product;
-  //
-  // }
+  Future<Product> getProduct(String pid) async{
+    final product =
+    products.doc(pid);
+    final productId = (await product.get()).id;
+    final productpiece = (await product.get()).data();
+
+    return Product.fromMap(productpiece, productId);
+  }
 
 }
