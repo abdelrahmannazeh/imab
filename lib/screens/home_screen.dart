@@ -22,9 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.shopping_bag),
-            onPressed: () async{
-
-            },
+            onPressed: () {},
           ),
           IconButton(
             icon: Icon(Icons.search),

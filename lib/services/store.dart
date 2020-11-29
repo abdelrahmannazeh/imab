@@ -4,12 +4,13 @@ import 'package:flash_chat/model/product.dart';
 import 'package:flash_chat/model/user.dart';
 
 class StoreService{
+  final uid = FirebaseAuth.instance.currentUser.uid;
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
   CollectionReference products = FirebaseFirestore.instance.collection('Products');
 
 
   Future<void> addUser() {
-    return users.doc(FirebaseAuth.instance.currentUser.uid)
+    return users.doc(uid)
         .set({'cart': List<String>(), 'orders': List<String>()})
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
@@ -18,12 +19,48 @@ class StoreService{
   Future<UserData> getUser() async {
     try {
       final userDocument =
-      users.doc(FirebaseAuth.instance.currentUser.uid);
+      users.doc(uid);
       final userData = (await userDocument.get()).data();
       return UserData.fromMap(userData);
     }catch (e){
 
     }
+  }
+
+  Future<void> addToCart(String pid){
+    try {
+      users.doc(uid).update({'cart': FieldValue.arrayUnion([pid])});
+    }catch(e){
+      print(e.toString());
+    }
+
+  }
+
+  Future<void> addToOrders(String pid){
+    try {
+      users.doc(uid).update({'orders': FieldValue.arrayUnion([pid])});
+    }catch(e){
+      print(e.toString());
+    }
+
+  }
+
+  Future<void> removeFromCart(String pid){
+    try {
+      users.doc(uid).update({'cart': FieldValue.arrayRemove([pid])});
+    }catch(e){
+      print(e.toString());
+    }
+
+  }
+
+  Future<void> removeFromOrder(String pid){
+    try {
+      users.doc(uid).update({'orders': FieldValue.arrayRemove([pid])});
+    }catch(e){
+      print(e.toString());
+    }
+
   }
 
   Future<String> addProduct( String name, String description, String price ){
@@ -32,6 +69,7 @@ class StoreService{
         .then((value) => "Product Added")
         .catchError((error) => print("Failed to add product: $error"));
   }
+
 
   Future<List<Product>> getProducts(){
     List<Product> product = List<Product>();
@@ -53,6 +91,14 @@ class StoreService{
     final productpiece = (await product.get()).data();
 
     return Product.fromMap(productpiece, productId);
+  }
+
+  Future<void> deleteProduct(String pid){
+    try {
+      return products.doc(pid).delete();
+    }catch(e){
+      print(e.toString());
+    }
   }
 
 }
