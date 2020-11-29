@@ -1,5 +1,6 @@
 import 'package:flash_chat/components/MyDrawerBuilder.dart';
 import 'package:flash_chat/model/product.dart';
+import 'package:flash_chat/screens/allproduct_screen.dart';
 import 'package:flash_chat/services/store.dart';
 import 'package:flutter/material.dart';
 import 'details_screen.dart';
@@ -89,7 +90,9 @@ class _HomeScreenState extends State<HomeScreen> {
             listName,
             style: TextStyle(fontSize: 18),
           ),
-          IconButton(icon: Icon(Icons.more_horiz), onPressed: () {}),
+          IconButton(icon: Icon(Icons.more_horiz), onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (_)=>AllProductScreen()));
+            },),
         ],
       ),
     );

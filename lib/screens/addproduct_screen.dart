@@ -133,7 +133,7 @@ class AddProduct extends StatelessWidget {
         return null;
       },
       onSaved: (String value) {
-        _name = value;
+        _amount = value;
       },
     );
   }

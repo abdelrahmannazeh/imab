@@ -1,4 +1,5 @@
 import 'package:flash_chat/screens/addproduct_screen.dart';
+import 'package:flash_chat/screens/allproduct_screen.dart';
 import 'package:flash_chat/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'screens/welcome_screen.dart';
@@ -35,7 +36,8 @@ class FlashChat extends StatelessWidget {
           Wrapper.id : (context) => Wrapper(),
           HomeScreen.id : (context) => HomeScreen(),
           ProfileScreen.id : (context) => ProfileScreen(),
-          AddProduct.id : (context) => AddProduct()
+          AddProduct.id : (context) => AddProduct(),
+          AllProductScreen.id : (context) => AllProductScreen(),
 
         },
 
