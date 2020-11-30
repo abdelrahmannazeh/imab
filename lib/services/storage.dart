@@ -13,6 +13,7 @@ class StorageService{
           .putFile(file);
     } on firebase_core.FirebaseException catch (e) {
       // e.g, e.code == 'canceled'
+      print(e.message);
     }
   }
 

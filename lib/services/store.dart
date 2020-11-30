@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/model/product.dart';
 import 'package:flash_chat/model/user.dart';
+import 'package:flash_chat/services/storage.dart';
 
 class StoreService{
+  StorageService _storage = StorageService();
   final uid = FirebaseAuth.instance.currentUser.uid;
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
   CollectionReference products = FirebaseFirestore.instance.collection('Products');
@@ -66,18 +68,21 @@ class StoreService{
   Future<String> addProduct( String name, String description, String price ){
     return products
         .add({ 'name' : name, 'description' : description, 'price' : price })
-        .then((value) => "Product Added")
+        .then((value) => value.id)
         .catchError((error) => print("Failed to add product: $error"));
   }
 
 
   Future<List<Product>> getProducts(){
     List<Product> product = List<Product>();
+
     return products.get().then((value){
+
       value.docs.forEach((element) {
+        String url = _storage.downloadURL('Products/${element.id}/product_pic') as String;
         product.add(Product(pid: element.id, name: element.get('name'),
             description: element.get('description'),
-            price: element.get('price')));
+            price: element.get('price'), productImage: url));
       });
       return product;
     }).catchError((onError) => print(onError.toString()));
@@ -89,8 +94,8 @@ class StoreService{
     products.doc(pid);
     final productId = (await product.get()).id;
     final productpiece = (await product.get()).data();
-
-    return Product.fromMap(productpiece, productId);
+    String urL = await _storage.downloadURL('Products/${pid}/product_pic') as String;
+    return Product.fromMap(productpiece, productId, urL);
   }
 
   Future<void> deleteProduct(String pid){

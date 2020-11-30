@@ -1,18 +1,23 @@
+import 'dart:io';
+
+import 'package:flash_chat/services/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/components/MyDrawerBuilder.dart';
+import 'package:image_picker/image_picker.dart';
 import './../services/store.dart';
 
 class AddProduct extends StatelessWidget {
   static String id = 'addproduct_screen';
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-
+  StoreService _store = StoreService();
+  StorageService _storage = StorageService();
   String _name;
   String _dis;
   String _amount;
 
   @override
   Widget build(BuildContext context) {
-    StoreService _store = StoreService();
+
     return Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: null,
@@ -66,9 +71,11 @@ class AddProduct extends StatelessWidget {
 
                     _formkey.currentState.save();
                     try {
-                      String a = await _store.addProduct(_name, _dis, _amount);
+                      dynamic pid = await _store.addProduct(_name, _dis, _amount).then((value) => value);
+                      File file =  await ImagePicker.pickImage(source: ImageSource.camera);
+                      await _storage.uploadFile(file, 'Products/${pid}/product_pic');
                       Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text(a),
+                        content: Text('Product Added'),
                         duration: Duration(seconds: 2),
                       ));
                       _formkey.currentState.reset();

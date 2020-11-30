@@ -29,9 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int selected = 0;
   @override
   Widget build(BuildContext context) {
-
+    if(loading)
        _store.getProducts().then((value){
-         if(loading)
         setState(() {
           test = value;
           loading = false;

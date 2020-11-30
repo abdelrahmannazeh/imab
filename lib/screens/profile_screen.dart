@@ -22,6 +22,7 @@ class _ProfileState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     name = FirebaseAuth.instance.currentUser.displayName;
+    print(FirebaseAuth.instance.currentUser.photoURL);
   }
 
   @override
@@ -136,7 +137,7 @@ class _ProfileState extends State<ProfileScreen> {
                 onPressed: () async {
                   await _storageService.uploadFile(image, 'Users/${FirebaseAuth.instance.currentUser.uid}/profile_pic');
                   String urL = await _storageService.downloadURL('Users/${FirebaseAuth.instance.currentUser.uid}/profile_pic') as String;
-                  FirebaseAuth.instance.currentUser.updateProfile(photoURL: urL);
+                  await FirebaseAuth.instance.currentUser.updateProfile(photoURL: urL);
                   Navigator.pushNamed(context, HomeScreen.id);
                   },
             ),
@@ -174,7 +175,9 @@ class _ProfileState extends State<ProfileScreen> {
     var _image = await ImagePicker.pickImage(source: source);
     setState(() {
       image = _image;
-      opacity = 1.0;
+      if(_image != null) {
+        opacity = 1.0;
+      }
     });
   }
 }
