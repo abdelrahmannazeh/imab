@@ -5,7 +5,6 @@ import 'package:flash_chat/model/user.dart';
 import 'package:flash_chat/services/storage.dart';
 
 class StoreService{
-  StorageService _storage = StorageService();
   final uid = FirebaseAuth.instance.currentUser.uid;
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
   CollectionReference products = FirebaseFirestore.instance.collection('Products');
@@ -40,7 +39,9 @@ class StoreService{
 
   Future<void> addToOrders(String pid){
     try {
-      users.doc(uid).update({'orders': FieldValue.arrayUnion([pid])});
+      users.doc(uid).update({'orders': FieldValue.arrayUnion([pid])}).then((value){
+        users.doc(uid).update({'cart': FieldValue.arrayRemove([pid])});
+      });
     }catch(e){
       print(e.toString());
     }
@@ -65,9 +66,13 @@ class StoreService{
 
   }
 
-  Future<String> addProduct( String name, String description, String price ){
+  Future<void> updateProduct(String field, String value, String pid){
+    return products.doc(pid).update({field : value});
+  }
+
+  Future<String> addProduct( String name, String description, String price){
     return products
-        .add({ 'name' : name, 'description' : description, 'price' : price })
+        .add({ 'name' : name, 'description' : description, 'price' : price, 'ImageUrl' : '' })
         .then((value) => value.id)
         .catchError((error) => print("Failed to add product: $error"));
   }
@@ -75,14 +80,11 @@ class StoreService{
 
   Future<List<Product>> getProducts(){
     List<Product> product = List<Product>();
-
     return products.get().then((value){
-
-      value.docs.forEach((element) {
-        String url = _storage.downloadURL('Products/${element.id}/product_pic') as String;
+      value.docs.forEach((element) async {
         product.add(Product(pid: element.id, name: element.get('name'),
             description: element.get('description'),
-            price: element.get('price'), productImage: url));
+            price: element.get('price'), productImage: element.get('ImageUrl')));
       });
       return product;
     }).catchError((onError) => print(onError.toString()));
@@ -94,8 +96,8 @@ class StoreService{
     products.doc(pid);
     final productId = (await product.get()).id;
     final productpiece = (await product.get()).data();
-    String urL = await _storage.downloadURL('Products/${pid}/product_pic') as String;
-    return Product.fromMap(productpiece, productId, urL);
+
+    return Product.fromMap(productpiece, productId);
   }
 
   Future<void> deleteProduct(String pid){

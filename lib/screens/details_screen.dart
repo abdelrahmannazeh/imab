@@ -2,7 +2,7 @@ import 'package:flash_chat/services/store.dart';
 import 'package:flutter/material.dart';
 
 class DetailsScreen extends StatelessWidget {
-  String imageUrl = '';
+  String imageUrl;
   String title ;
   String dis;
   String price;
@@ -57,7 +57,7 @@ class DetailsScreen extends StatelessWidget {
       backgroundColor: Theme.of(context).primaryColor,
       expandedHeight: MediaQuery.of(context).size.height * .4,
       flexibleSpace: FlexibleSpaceBar(
-        background: Container(margin: EdgeInsets.only(top:MediaQuery.of(context).size.height * .04 ) ,child: Image(image: AssetImage(this.imageUrl))),
+        background: Container(margin: EdgeInsets.only(top:MediaQuery.of(context).size.height * .04 ) ,child: Image(image: NetworkImage(this.imageUrl))),
       ),
     );
   }

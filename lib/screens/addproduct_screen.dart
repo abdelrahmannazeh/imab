@@ -10,6 +10,7 @@ class AddProduct extends StatelessWidget {
   static String id = 'addproduct_screen';
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   StoreService _store = StoreService();
+  File file;
   StorageService _storage = StorageService();
   String _name;
   String _dis;
@@ -71,14 +72,25 @@ class AddProduct extends StatelessWidget {
 
                     _formkey.currentState.save();
                     try {
-                      dynamic pid = await _store.addProduct(_name, _dis, _amount).then((value) => value);
-                      File file =  await ImagePicker.pickImage(source: ImageSource.camera);
-                      await _storage.uploadFile(file, 'Products/${pid}/product_pic');
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text('Product Added'),
-                        duration: Duration(seconds: 2),
-                      ));
-                      _formkey.currentState.reset();
+                      if(file != null){
+                        String url;
+                        dynamic productid = await _store.addProduct(_name, _dis, _amount).then((value) => value);
+                        await _storage.uploadFile(file, 'Products/${productid}/product_pic');
+                        await _storage.downloadURL('Products/${productid}/product_pic').then((value) {
+                          url = value;
+                        });
+                        await _store.updateProduct('ImageUrl', url, productid);
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text('Product Added'),
+                          duration: Duration(seconds: 2),
+                        ));
+                        _formkey.currentState.reset();
+                      }else{
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text('Put Image'),
+                          duration: Duration(seconds: 2),
+                        ));
+                      }
                     } catch (e) {
                       print(e);
                     }
@@ -178,7 +190,12 @@ class AddProduct extends StatelessWidget {
                     Icons.add_a_photo,
                     color: Colors.white,
                   ),
-                  onPressed: () {}),
+                  onPressed: () async{
+                    final picker = ImagePicker();
+                    PickedFile pickedfile =  await picker.getImage(source: ImageSource.gallery);
+                    file = File(pickedfile.path);
+
+                  }),
             )),
       ],
     );

@@ -95,7 +95,7 @@ class _CartItemState extends State<CartItem> {
             Container(
                 width: MediaQuery.of(context).size.width * .3,
                 child: Image.network(
-                  widget.image,
+                  widget.a.productImage,
                   fit: BoxFit.cover,
                 )),
             Column(

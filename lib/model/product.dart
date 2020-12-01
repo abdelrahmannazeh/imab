@@ -6,7 +6,7 @@ class Product{
   String productImage;
   Product({ this.pid, this.name, this.description, this.price, this.productImage });
 
-  factory Product.fromMap(Map<String, dynamic> map, dynamic pid, dynamic productImage) {
+  factory Product.fromMap(Map<String, dynamic> map, dynamic pid) {
     if (map == null) return null;
 
     return Product(
@@ -14,7 +14,7 @@ class Product{
       name: map['name'],
       description: map['description'],
       price: map['price'],
-      productImage: productImage
+      productImage: map['ImageUrl']
 
     );
   }

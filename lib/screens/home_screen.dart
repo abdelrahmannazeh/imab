@@ -17,13 +17,6 @@ class HomeScreen extends StatefulWidget {
 
 
 
-// void getAll() async{
-//   test = await  _store.getProducts();
-//   print(test.length);
-//   loading = false;
-// }
-
-
 class _HomeScreenState extends State<HomeScreen> {
   bool loading = true;
   int selected = 0;
@@ -67,9 +60,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ListView(
                 children: [
                   barBetween("offers"),
-                  elementBuilder(context, 10, false),
+                  elementBuilder(context, test.length, false, test),
                   barBetween("most pobular"),
-                  elementBuilder(context, 10, true),
+                  elementBuilder(context, test.length, true, test),
                 ],
               ),
             ),
@@ -97,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget elementBuilder(context, int elementNumber, bool x) {
+  Widget elementBuilder(context, int elementNumber, bool x, List<Product> products) {
     return Container(
       height: MediaQuery.of(context).size.height / 3,
       child: ListView.builder(
@@ -108,12 +101,12 @@ class _HomeScreenState extends State<HomeScreen> {
             margin: EdgeInsets.all(11),
             width: MediaQuery.of(context).size.width * 2 / 5 - 20,
             child: GestureDetector(
-              onTap: (){Navigator.push(context, MaterialPageRoute(builder: (_)=>DetailsScreen(imageUrl: "assets/Products/product(${index}).png",)));},
+              onTap: (){Navigator.push(context, MaterialPageRoute(builder: (_)=>DetailsScreen(imageUrl: test[index].productImage,title: test[index].name,dis: test[index].description,price: test[index].price,pid: test[index].pid)));},
               child: GridTile(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(40),
                   child: Image(
-                    image: AssetImage('assets/Products/product(${index}).png'),
+                    image: NetworkImage(test[index].productImage),
                   ),
                 ),
               ),
