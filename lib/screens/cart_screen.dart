@@ -1,5 +1,6 @@
 import 'package:flash_chat/model/product.dart';
 import 'package:flash_chat/model/user.dart';
+import 'package:flash_chat/screens/order_screen.dart';
 import 'package:flash_chat/services/store.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +42,9 @@ class _CartScreenState extends State<CartScreen> {
           style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1),
         ),
         actions: [
-          IconButton(icon: Icon(Icons.shopping_cart), onPressed: (){}),
+          IconButton(icon: Icon(Icons.shopping_cart), onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (_) => OrderScreen()));
+          }),
         ],
         centerTitle: true,
       ),
@@ -49,7 +52,7 @@ class _CartScreenState extends State<CartScreen> {
       body: loading? Center(child: CircularProgressIndicator(),): Container(
         child: ListView.builder(
           itemBuilder: (context, index) {
-            return CartItem(title: cartData[index],image: 'https://picsum.photos/250?image=2',price: '30\$',pid: cartData[index],);
+            return CartItem(pid: cartData[index],);
           },
           itemCount: cartData.length ,
         ),
@@ -60,12 +63,10 @@ class _CartScreenState extends State<CartScreen> {
 
 class CartItem extends StatefulWidget {
 
-  String title;
-  String image;
-  String price;
+
   String pid;
   Product a;
-  CartItem({this.title,this.image,this.price,@required this.pid});
+  CartItem({@required this.pid});
 
   @override
   _CartItemState createState() => _CartItemState();
@@ -76,7 +77,7 @@ class _CartItemState extends State<CartItem> {
   bool loading = true;
   @override
   Widget build(BuildContext context) {
-    if(true)
+    if(loading)
       _store.getProduct(widget.pid).then((value) {
         setState(() {
           widget.a = value;
@@ -107,7 +108,9 @@ class _CartItemState extends State<CartItem> {
                   children: [
                     RaisedButton(
                       child: Text('buy'),
-                      onPressed: () {},
+                      onPressed: () async {
+                       await _store.addToOrders(widget.a.pid);
+                      },
                     ),
                     SizedBox(width: MediaQuery.of(context).size.width * .05,),
                     RaisedButton(
@@ -116,7 +119,9 @@ class _CartItemState extends State<CartItem> {
                         'cancel',
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: () {},
+                      onPressed: () async{
+                       await _store.removeFromCart(widget.a.pid);
+                      },
                     ),
                     SizedBox(width: MediaQuery.of(context).size.width * .05,)
                   ],

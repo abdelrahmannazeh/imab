@@ -1,30 +1,59 @@
+import 'package:flash_chat/model/product.dart';
+import 'package:flash_chat/model/user.dart';
+import 'package:flash_chat/services/store.dart';
 import 'package:flutter/material.dart';
 
-class OrderScreen extends StatelessWidget {
+class OrderScreen extends StatefulWidget {
+  _orderScrean createState() => _orderScrean();
+}
+class _orderScrean extends State<OrderScreen>{
+  bool loading = true;
+  StoreService _store = StoreService();
+  UserData user ;
+  dynamic orderData;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    _store.getUser().then((value){
+      if(loading)
+        setState(() {
+          user = value;
+          orderData = user.orders;
+          loading = false;
+        });
+    });
+    return loading? Center(child: CircularProgressIndicator(),):
+      Scaffold(
       appBar: AppBar(title: Text('Orders',style: TextStyle(fontWeight: FontWeight.bold,letterSpacing: 1 ),),centerTitle: true,),
       backgroundColor: Colors.grey[100],
-      body: Container(child: ListView.builder(itemBuilder: (ctx, index) {
-        return OrderItem(title: 'T-shert', price: '20\$',amount: '2',total: '40\$',);
+      body: Container(child: ListView.builder(
+        itemCount: orderData.length,
+          itemBuilder: (ctx, index) {
+        return OrderItem(pid :orderData[index]);
       })),
     );
   }
 }
+class OrderItem extends StatefulWidget {
+  String pid;
+  Product a;
+_orderIemState createState() => _orderIemState();
+ OrderItem({this.pid});
 
-class OrderItem extends StatelessWidget {
-  String imageUrl;
-  String title;
-  String price;
-  String amount;
-  String total;
-
-  OrderItem({this.imageUrl = 'https://picsum.photos/250?image=2' , this.title , this.price , this.amount , this.total});
-
+}
+class _orderIemState extends State<OrderItem>{
+  StoreService _store = StoreService();
+  bool loading = true;
   @override
   Widget build(BuildContext context) {
-    return Container(
+    if(loading)
+      _store.getProduct(widget.pid).then((value) {
+        setState(() {
+          widget.a = value;
+          loading = false;
+        });
+      });
+    return loading? Container()
+     : Container(
       height: MediaQuery.of(context).size.height * .2,
       padding: EdgeInsets.all(8),
       child: Card(
@@ -39,7 +68,7 @@ class OrderItem extends StatelessWidget {
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: Image.network(
-                        imageUrl,
+                        widget.a.productImage,
                         fit: BoxFit.cover,
                       )),
                 ),
@@ -47,27 +76,19 @@ class OrderItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('title : '+ this.title),
+                    Text('title : '+ widget.a.name),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('price : '+this.price),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text('amount : '+ this.amount),
+                        Text('price : '+widget.a.price),
+
                       ],
                     )
                   ],
                 ),
               ],
             ),
-            Container(
-              padding: EdgeInsets.all(10),
-              child: Center(
-                child: Text('\$'+this.total),
-              ),
-            ),
+
           ],
         ),
       ),

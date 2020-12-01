@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flash_chat/screens/cart_screen.dart';
 import 'package:flash_chat/screens/home_screen.dart';
+import 'package:flash_chat/screens/order_screen.dart';
 import 'package:flash_chat/services/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -157,7 +159,11 @@ class _ProfileState extends State<ProfileScreen> {
       ),
       child: ListTile(
         onTap: (){
-
+          if(title == 'Orders'){
+            Navigator.push(context, MaterialPageRoute(builder: (_) => OrderScreen()));
+          }else {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => CartScreen()));
+          }
         },
           title: Text(
             title,
